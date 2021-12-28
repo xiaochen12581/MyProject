@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.chen.mapper.PublicMapper">
+    <select id="findHot" parameterType="map" resultType="cn.chen.entity.Hot">
+        select * from t_hot where type = #{type} limit 0,#{num};
+    </select>
+    <resultMap id="books" type="cn.chen.entity.Book">
+        <id property="bookid" column="bookid"/>
+        <result property="sn" column="sn"/>
+        <result property="name" column="name"/>
+        <result property="price" column="price"/>
+        <result property="author" column="author"/>
+        <result property="publisher" column="publisher"/>
+        <result property="tpublish" column="tpublish"/>
+        <result property="picture" column="picture"/>
+        <collection property="bookType" ofType="cn.chen.entity.BookType">
+            <id property="id" column="id"/>
+            <result property="type" column="type"/>
+        </collection>
+    </resultMap>
+    <select id="findIf" parameterType="map" resultMap="books">
+       select t_book.*
+            from t_book where
+             t_book.name like  concat("%", #{key}, "%")
+             or t_book.author like  concat("%", #{key}, "%")
+             or t_book.publisher like  concat("%", #{key}, "%")
+             order by t_book.id
+            limit #{start}, #{num}
+    </select>
+
+    <select id="getCountByIf" resultType="int" >
+      select count(*) from t_book where
+             t_book.name like  concat("%", #{key}, "%")
+             or t_book.author like  concat("%", #{key}, "%")
+             or t_book.publisher like  concat("%", #{key}, "%")
+   </select>
+
+    <select id="findBookByPage" parameterType="map" resultMap="books">
+        select t_book.*
+        from t_book where 1=1
+        <if test="typeid!=0">
+            and t_book.typeid = #{typeid}
+        </if>
+        order by t_book.id
+        limit #{start}, #{num}
+    </select>
+    <update id="addRate" parameterType="int">
+        update t_book set rate = rate + 1 where id = #{bookid}
+    </update>
+    <select id="findRate5" resultMap="books">
+        select t_book.id     bookid,
+               t_book.name   name,
+               t_book.sn     sn,
+               t_book.price  price,
+               t_book.author author,
+               t_book.picture picture
+         from t_book order by t_book.rate desc limit 0,5;
+    </select>
+    <select id="findSale5" resultMap="books">
+        select t_book.id     bookid,
+               t_book.name   name,
+               t_book.sn     sn,
+               t_book.price  price,
+               t_book.author author,
+               t_book.picture picture
+                from t_book order by t_book.salenum desc limit 0,5;
+    </select>
+    <select id="findFav5" resultMap="books">
+        select t_book.id     bookid,
+               t_book.name   name,
+               t_book.sn     sn,
+               t_book.price  price,
+               t_book.author author,
+               t_book.picture picture
+              from t_book order by t_book.favnum desc limit 0,5;
+    </select>
+    <select id="findBookByPageRate" parameterType="map" resultMap="books">
+        select * form t_book order by t_book.rate desc where 1 = 1
+        <if test="typeid!=0">
+            and typeid = #{typeid}
+        </if>
+        limit #{start},#{num};
+    </select>
+    <select id="findBookByPageSale" parameterType="map" resultMap="books">
+        select * form t_book order by t_book.salenum desc where 1 = 1
+        <if test="typeid!=0">
+            and typeid = #{typeid}
+        </if>
+        limit #{start},#{num};
+    </select>
+    <select id="findBookByPageFav" parameterType="map" resultMap="books">
+        select * form t_book order by t_book.favnum desc where 1 = 1
+        <if test="typeid!=0">
+            and typeid = #{typeid}
+        </if>
+        limit #{start},#{num};
+    </select>
+    <select id="getCount" parameterType="int"  resultType="int" >
+        select count(*) from t_book where 1=1
+        <if test="typeid!=null and typeid>0">
+            and  t_book.typeid = #{typeid}
+        </if>
+    </select>
+</mapper>

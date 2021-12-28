@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.chen.mapper.BookTypeMapper">
+    <select id="find"  resultType="cn.chen.entity.BookType">
+             select * from t_booktype;
+    </select>
+    <select id="findById" resultType="cn.chen.entity.BookType">
+              select * from t_booktype where id = #{id};
+    </select>
+    <insert id="add" parameterType="cn.chen.entity.BookType">
+         insert into t_booktype(type) value(#{type})
+    </insert>
+    <update id="update" parameterType="cn.chen.entity.BookType">
+         update t_booktype set type=#{type} where id=#{id}
+    </update>
+</mapper>

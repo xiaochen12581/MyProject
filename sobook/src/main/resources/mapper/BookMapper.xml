@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.chen.mapper.BookMapper">
+    <resultMap id="books" type="cn.chen.entity.Book">
+        <id property="bookid" column="bookid"/>
+        <result property="sn" column="sn"/>
+        <result property="name" column="name"/>
+        <result property="price" column="price"/>
+        <result property="author" column="author"/>
+        <result property="publisher" column="publisher"/>
+        <result property="tpublish" column="tpublish"/>
+        <result property="picture" column="picture"/>
+        <collection property="bookType" ofType="cn.chen.entity.BookType">
+            <id property="id" column="id"/>
+            <result property="type" column="type"/>
+        </collection>
+    </resultMap>
+    <select id="findAll" resultMap="books">
+          select t_book.id			    bookid,
+          t_book.sn            sn,
+          t_book.name            name,
+          t_book.price           price,
+          t_book.author          author,
+          t_book.publisher        publisher,
+          t_book.tpublish         tpublish,
+          t_book.picture	        picture,
+          t_booktype.id           id,
+          t_booktype.type        type
+          from  t_book,t_booktype
+          where t_book.typeid = t_booktype.id
+      </select>
+    <resultMap id="book" type="cn.chen.entity.Book">
+        <id property="bookid" column="bookid"/>
+        <result property="sn" column="sn"/>
+        <result property="name" column="name"/>
+        <result property="price" column="price"/>
+        <result property="author" column="author"/>
+        <result property="publisher" column="publisher"/>
+        <result property="tpublish" column="tpublish"/>
+        <result property="picture" column="picture"/>
+        <collection property="bookType" ofType="cn.chen.entity.BookType">
+            <id property="id" column="id"/>
+            <result property="type" column="type"/>
+        </collection>
+    </resultMap>
+    <select id="findById" parameterType="Integer" resultMap="book">
+          select t_book.id			    bookid,
+          t_book.sn            sn,
+          t_book.name            name,
+          t_book.price           price,
+          t_book.author          author,
+          t_book.publisher        publisher,
+          t_book.tpublish         tpublish,
+          t_book.picture	        picture,
+          t_booktype.id           id,
+          t_booktype.type        type
+          from  t_book,t_booktype
+          where t_book.typeid = t_booktype.id and t_book.id = #{bookid}
+      </select>
+
+    <select id="findByPage" parameterType="map" resultMap="book">
+         select t_book.id			    bookid,
+          t_book.sn            sn,
+          t_book.name            name,
+          t_book.price           price,
+          t_book.author          author,
+          t_book.publisher        publisher,
+          t_book.tpublish         tpublish,
+          t_book.picture	        picture,
+          t_booktype.id           id,
+          t_booktype.type        type
+          from  t_book,t_booktype
+          where t_book.typeid = t_booktype.id limit #{start},#{num};
+    </select>
+    <select id="findTotal" resultType="int">
+        select count(*) from t_book,t_booktype where t_book.typeid = t_booktype.id;
+    </select>
+    <insert id="addBook" parameterType="cn.chen.entity.Book" useGeneratedKeys="true" keyProperty="bookid">
+        insert into t_book(name,   sn,    price,    publisher,    tpublish, picture,  author,typeid)
+        VALUES            (#{name},#{sn},#{price},#{publisher},#{tpublish},#{picture},#{author},#{typeid})
+    </insert>
+    <update id="upBook" parameterType="cn.chen.entity.Book">
+        update t_book <set>
+        name = #{name},sn = #{sn},price = #{price},publisher = #{publisher},tpublish = #{tpublish},
+        <if test="picture!=null">
+            picture = #{picture},
+        </if>
+        typeid = #{typeid},author = #{author}
+    </set>
+        where id = #{bookid}
+    </update>
+</mapper>

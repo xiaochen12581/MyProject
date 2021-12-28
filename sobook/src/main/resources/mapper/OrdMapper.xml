@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.chen.mapper.OrdMapper">
+        <insert id="addOrd" parameterType="cn.chen.entity.Order">
+            <selectKey order="AFTER" keyProperty="ordid" resultType="int">
+                select LAST_INSERT_ID()
+            </selectKey>
+            insert into t_order(uid,    amount,   ispay,    tpay, addr,     phone,  tcreate,  shipno)
+                        values(#{uid},#{amount},#{ispay},#{tpay},#{addr},#{phone},#{tcreate},#{shipno})
+        </insert>
+        <insert id="addOrdItem" parameterType="cn.chen.entity.Orditem">
+            insert into t_orditem(ordid, bookid,    num,  price)
+                        values (#{ordid},#{bookid},#{num},#{price})
+        </insert>
+    <select id="findByOrdId" resultType="cn.chen.entity.Order">
+        select * from t_order where ordid = #{ordid};
+    </select>
+    <update id="UpdateIspay" parameterType="cn.chen.entity.Order">
+        update t_order set ispay = #{ispay},tpay = #{tpay},addr = #{addr},phone = #{phone} where ordid = #{ordid};
+    </update>
+    <select id="findAllOrd" resultType="cn.chen.entity.Order">
+        select * from t_order where uid = #{uid};
+    </select>
+    <select id="findItemBook" resultType="cn.chen.entity.ItemBook">
+        select t_orditem.num num,
+        t_orditem.price price,
+        t_book.name name,
+        t_book.picture picture
+        from t_orditem,t_book where t_orditem.ordid = #{ordid} and t_orditem.bookid = t_book.id;
+    </select>
+    <select id="findAll" parameterType="map" resultType="cn.chen.entity.Order">
+        select * from t_order where 1=1 limit #{start},#{num};
+    </select>
+</mapper>

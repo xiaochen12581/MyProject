@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.chen.mapper.CartMapper">
+    <resultMap id="cart_map" type="cn.chen.entity.BookCart">
+        <id property="id" column="cartid"></id>
+        <result property="num" column="num"></result>
+        <result property="tcreate" column="tcreate"></result>
+        <association property="book" javaType="cn.chen.entity.Book">
+            <id property="bookid" column="bookid"></id>
+            <result property="name" column="name"/>
+            <result property="author" column="author"/>
+            <result property="picture" column="picture"/>
+            <result property="price" column="price"/>
+        </association>
+    </resultMap>
+    <insert id="add" parameterType="cn.chen.entity.Cart">
+          insert into t_cart (uid,bookid,num,tcreate)
+                      value (#{uid},#{bookid},#{num},#{tcreate});
+    </insert>
+    <select id="findByUidBid" parameterType="cn.chen.entity.Cart" resultType="cn.chen.entity.Cart">
+        select * from t_cart where uid = #{uid} and bookid = #{bookid};
+    </select>
+    <select id="bookCartById" resultMap="cart_map">
+        select t_book.picture   picture,
+                t_book.name     name,
+                t_book.price    price,
+                t_cart.num      num,
+                t_book.id       bookid,
+                t_cart.id       cartid,
+                t_cart.tcreate  tcreate,
+                t_cart.uid      uid
+                from t_book,t_cart
+                where t_cart.uid = #{uid} and t_cart.bookid = t_book.id;
+    </select>
+    <delete id="delById" parameterType="int">
+        delete from t_cart where id = #{id};
+    </delete>
+
+</mapper>

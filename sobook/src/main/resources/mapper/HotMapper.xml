@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.chen.mapper.HotMapper">
+   <select id="findAll" resultType="cn.chen.entity.Hot">
+       select * from t_hot;
+   </select>
+    <insert id="addHot" parameterType="cn.chen.entity.Hot">
+        insert into t_hot (memo,picture,hot,type)
+                  value (#{memo},#{picture},#{hot},#{type})
+    </insert>
+    <delete id="delete" parameterType="int">
+        delete from t_hot where id = #{id};
+    </delete>
+    <select id="findByPic" resultType="cn.chen.entity.Hot">
+        select * from t_hot where picture = #{picture};
+    </select>
+</mapper>
