@@ -29,6 +29,7 @@ public class BookController {
     @RequestMapping("/findAll")
     public Map<String,Object> findAll(){
         List<Book> all = bookService.findAll();
+        System.out.println(all);
         if (all != null){
             return RespJson.pack(200,"查询成功",all);
         }else {
